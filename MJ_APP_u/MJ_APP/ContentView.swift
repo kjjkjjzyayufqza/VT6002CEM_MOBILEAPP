@@ -36,13 +36,6 @@ struct ContentView: View {
                             
                         }.navigationTitle("Title 2")
                     }
-                case 2:
-                    NavigationStack {
-                        VStack{
-                            DrawingView()
-                            
-                        }.navigationTitle("Title 3")
-                    }
                 default:
                     NavigationStack {
                         VStack{
