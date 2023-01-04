@@ -6,38 +6,43 @@
 //
 
 import SwiftUI
-import PencilKit
+import CoreData
+
 struct DrawingView: View {
-    
     @Environment(\.managedObjectContext) private var viewContext
     
-    @FetchRequest(entity: Drawing.entity(), sortDescriptors: []) var drawing: FetchedResults<Drawing>
+    @FetchRequest(entity: Drawing.entity(), sortDescriptors: []) var drawings: FetchedResults<Drawing>
     
     @State private var showSheet = false
-    
     var body: some View {
         NavigationView{
             VStack{
                 List {
-                    ForEach(drawing){ drawing in
-                        Text(drawing.title ?? "Untitled")
+                    ForEach(drawings){drawing in
+                        NavigationLink(destination: DisplayDrawing(id: drawing.id, data: drawing.canvasData, title: drawing.title) ,label: {
+                            Text(drawing.title ?? "Untitled")
+                        })
                     }
+                    .onDelete(perform: deleteItem)
+                    
+                    Button(action: {
+                        self.showSheet.toggle()
+                    }, label: {
+                        HStack{
+                            Image(systemName: "plus")
+                            Text("Add Canvas")
+                        }
+                    })
+                    .foregroundColor(.blue)
+                    .sheet(isPresented: $showSheet, content: {
+                        AddNewCanvasViews().environment(\.managedObjectContext, viewContext)
+                    })
                 }
-                .toolbar{
+                .navigationTitle(Text("Drawing"))
+                .toolbar {
                     EditButton()
                 }
-                
-                Button(action: {
-                    self.showSheet.toggle()
-                }, label: {
-                    HStack{
-                        Image(systemName: "plus")
-                        Text("Add Canvas")
-                    }
-                })
-                .sheet(isPresented: $showSheet, content: {
-                    AddNewCanvasViews().environment(\.managedObjectContext, viewContext)
-                })
+                .scrollContentBackground(.hidden)
             }
             VStack{
                 Image(systemName: "scribble.variable")
@@ -45,13 +50,29 @@ struct DrawingView: View {
                 Text("No canvas has been selected")
                     .font(.title)
             }
-            
+        }
+        .navigationViewStyle(DoubleColumnNavigationViewStyle())
+        
+    }
+    
+    func deleteItem(at offset: IndexSet) {
+        for index in offset{
+            let itemToDelete = drawings[index]
+            viewContext.delete(itemToDelete)
+            do{
+                try viewContext.save()
+            }
+            catch{
+                print(error)
+            }
         }
     }
+    
 }
+
 
 struct DrawingView_Previews: PreviewProvider {
     static var previews: some View {
-        DrawingView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        DrawingView()
     }
 }
