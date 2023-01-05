@@ -40,6 +40,7 @@ struct HomeView: View {
                     .navigationDestination(isPresented: $readyToNavigate) {
                         Text("a")
                     }
+                    Spacer()
                 }
             }
             .navigationTitle("Home")

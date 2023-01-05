@@ -7,11 +7,14 @@
 
 import SwiftUI
 import CoreData
+import PencilKit
 
 struct DrawingView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @FetchRequest(entity: Drawing.entity(), sortDescriptors: []) var drawings: FetchedResults<Drawing>
+    
+    @State var showingAlert = false
     
     @State private var showSheet = false
     var body: some View {
@@ -24,7 +27,22 @@ struct DrawingView: View {
                         })
                     }
                     .onDelete(perform: deleteItem)
-                    
+                    Button(action: {
+                        do{
+//                            let data:Data! = drawings[0].canvasData
+//                            let a = try PKDrawing(data: data)
+//                            let image = a.image(from: CGRect(x: 0, y: 0, width: 1000, height: 1000), scale: 1)
+//                            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                            showingAlert = true
+                        }catch{
+                            
+                        }
+
+                    }, label: {
+                        Text("T")
+                    }).alert("Save to photo", isPresented: $showingAlert) {
+                        Button("OK", role: .cancel) { }
+                    }
                     Button(action: {
                         self.showSheet.toggle()
                     }, label: {

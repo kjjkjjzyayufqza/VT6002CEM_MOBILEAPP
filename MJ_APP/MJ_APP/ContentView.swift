@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import SceneKit
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
@@ -15,7 +16,7 @@ struct ContentView: View {
         animation: .default)
     private var items: FetchedResults<Item>
     
-    @FetchRequest(entity: Drawing.entity(), sortDescriptors: [], predicate: nil) var ships: FetchedResults<Drawing>
+    @FetchRequest(entity: Drawing.entity(), sortDescriptors: [], predicate: nil) var drawingData: FetchedResults<Drawing>
     
     @State var selectedIndex = 0
     
@@ -49,12 +50,7 @@ struct ContentView: View {
                 case 1:
                     NavigationStack {
                         VStack{
-                            Button(action: {
-                                for i in ships{
-                                    i.title = "0"
-                                }
-                                
-                            }, label: {Text("2")})
+                            ImagePickerView()
                             
                         }.navigationTitle("Title 2")
                     }
@@ -64,6 +60,19 @@ struct ContentView: View {
                             DrawingView()
                             
                         }.navigationTitle("Title 3")
+                    }
+                case 3:
+                    NavigationStack{
+                        VStack{
+                            var scene:SCNScene? = .init(named: "Tomato.usdz")
+                            SceneView(scene: scene)
+                        }
+                    }
+                case 4:
+                    NavigationStack{
+                        VStack{
+                            CreateView()
+                        }
                     }
                 default:
                     NavigationStack {

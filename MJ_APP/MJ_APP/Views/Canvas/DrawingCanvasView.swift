@@ -26,9 +26,6 @@ struct DrawingCanvasView: UIViewControllerRepresentable {
                 
                 obj?.setValue(data, forKey: "canvasData")
                 do{
-                    let a = try PKDrawing(data: data)
-                    let image = a.image(from: CGRect(x: 0, y: 0, width: 1000, height: 1000), scale: 1)
-
                     try viewContext.save()
                 }
                 catch{
@@ -47,3 +44,4 @@ func getDocumentsDirectory() -> URL {
     let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
     return paths[0]
 }
+
