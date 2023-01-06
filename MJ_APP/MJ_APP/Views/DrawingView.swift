@@ -16,33 +16,49 @@ struct DrawingView: View {
     
     @State var showingAlert = false
     
+    
     @State private var showSheet = false
     var body: some View {
         NavigationView{
             VStack{
+
                 List {
                     ForEach(drawings){drawing in
-                        NavigationLink(destination: DisplayDrawing(id: drawing.id, data: drawing.canvasData, title: drawing.title) ,label: {
-                            Text(drawing.title ?? "Untitled")
-                        })
-                    }
-                    .onDelete(perform: deleteItem)
-                    Button(action: {
-                        do{
-//                            let data:Data! = drawings[0].canvasData
-//                            let a = try PKDrawing(data: data)
-//                            let image = a.image(from: CGRect(x: 0, y: 0, width: 1000, height: 1000), scale: 1)
-//                            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-                            showingAlert = true
-                        }catch{
-                            
+                        HStack{
+
+                            NavigationLink(destination: DisplayDrawing(id: drawing.id, data: drawing.canvasData, title: drawing.title) ,label: {
+                                HStack{
+                                    Text(drawing.title ?? "Untitled")
+                                    Spacer()
+                                    Button(action: {
+                                        do{
+                                            let data:Data! = drawing.canvasData
+                                            let a = try PKDrawing(data: data)
+                                            let image = a.image(from: a.bounds, scale: 1)
+                                            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                                            showingAlert = true
+                                        }catch{
+                                            
+                                        }
+                                    }, label: {
+                                        Text("Save")
+                                        Image(systemName: "square.and.arrow.down")
+                                        
+                                    }).alert("Save to photo done", isPresented: $showingAlert) {
+                                        Button("OK", role: .cancel) { }
+                                    }
+                                    .padding(.all,10)
+                                    .foregroundColor(.white)
+                                    .background(Color.blue)
+                                    .cornerRadius(10)
+                                    .shadow(radius: 2)
+                                    .buttonStyle(.plain)
+                                }
+                            })
                         }
 
-                    }, label: {
-                        Text("T")
-                    }).alert("Save to photo", isPresented: $showingAlert) {
-                        Button("OK", role: .cancel) { }
                     }
+                    .onDelete(perform: deleteItem)
                     Button(action: {
                         self.showSheet.toggle()
                     }, label: {

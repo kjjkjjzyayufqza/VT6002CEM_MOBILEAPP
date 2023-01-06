@@ -10,13 +10,13 @@ import SceneKit
 
 struct SceneView: UIViewRepresentable {
     
-    var scene:SCNScene? = .init(named: "Tomato.usdz")
+    var scene:SCNScene? = .init(named: "Mahjong.usdz")
     
     func makeUIView(context: Context) -> some UIView {
         
-        let node = scene?.rootNode.childNode(withName: "Tomato", recursively: true)
-        node?.childNodes[0].childNodes[0].geometry?.firstMaterial?.diffuse.contents = UIColor.green
-        print(node?.childNodes[0])
+//        let node = scene?.rootNode.childNode(withName: "Tomato", recursively: true)
+//        node?.childNodes[0].childNodes[0].geometry?.firstMaterial?.diffuse.contents = UIColor.green
+//        print(node?.childNodes[0])
         
         let view = SCNView()
         view.allowsCameraControl = true

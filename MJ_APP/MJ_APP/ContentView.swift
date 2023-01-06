@@ -44,7 +44,9 @@ struct ContentView: View {
                 case 0:
                     NavigationStack {
                         VStack{
+//                            LocationView()
                             HomeView()
+//                            ARViewContainer()
                         }
                     }
                 case 1:
@@ -64,9 +66,10 @@ struct ContentView: View {
                 case 3:
                     NavigationStack{
                         VStack{
-                            var scene:SCNScene? = .init(named: "Tomato.usdz")
-                            SceneView(scene: scene)
-                        }
+//                            var scene:SCNScene? = .init(named: "Tomato.usdz")
+//                            SceneView(scene: scene)
+                            LocationView()
+                        }.navigationTitle("Location")
                     }
                 case 4:
                     NavigationStack{
