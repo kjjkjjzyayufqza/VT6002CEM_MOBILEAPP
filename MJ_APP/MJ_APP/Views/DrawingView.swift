@@ -25,7 +25,6 @@ struct DrawingView: View {
                 List {
                     ForEach(drawings){drawing in
                         HStack{
-
                             NavigationLink(destination: DisplayDrawing(id: drawing.id, data: drawing.canvasData, title: drawing.title) ,label: {
                                 HStack{
                                     Text(drawing.title ?? "Untitled")
@@ -76,8 +75,9 @@ struct DrawingView: View {
                 .toolbar {
                     EditButton()
                 }
-                .scrollContentBackground(.hidden)
+//                .scrollContentBackground(.hidden)
             }
+
             VStack{
                 Image(systemName: "scribble.variable")
                     .font(.largeTitle)

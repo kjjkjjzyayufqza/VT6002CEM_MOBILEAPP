@@ -8,19 +8,35 @@
 import SwiftUI
 
 struct CreateView: View {
+    
+    @State var imageData:selectType = selectType(Front: UIImage(), Back: UIImage(), Left: UIImage(), Right: UIImage(), Top: UIImage(), Bottom: UIImage())
+    
+    @State private var isShowPhotoLibrary = false
+
     var body: some View {
         VStack{
             HStack{
                 VStack{
-                    Button(action: {}, label: {
+                    Button(action: {
+                        isShowPhotoLibrary = true
+                    }, label: {
                         VStack{
-                            Image(systemName: "plus.app")
-                                .resizable()
-                                .frame(width: 32.0, height: 32.0)
-                        }.frame(width: 80, height: 120, alignment: .center)
+                            if(imageData.Front.size != .zero){
+                                Image(uiImage: imageData.Front)
+                                    .resizable()
+                            }else{
+                                Image(systemName: "plus.app")
+                                    .resizable()
+                                    .frame(width: 32.0, height: 32.0)
+                            }
+
+                        }.frame(width: 80, height: 80, alignment: .center)
                     })
                     .foregroundColor(Color.black)
                     .background(Color(hex: "F0EFF5"))
+                    .sheet(isPresented: $isShowPhotoLibrary) {
+                        ImagePicker(sourceType: .photoLibrary, selectedImage: self.$imageData.Front)
+                    }
                     Text("Top")
                 }
             }
@@ -84,7 +100,7 @@ struct CreateView: View {
                             Image(systemName: "plus.app")
                                 .resizable()
                                 .frame(width: 32.0, height: 32.0)
-                        }.frame(width: 80, height: 120, alignment: .center)
+                        }.frame(width: 80, height: 80, alignment: .center)
                     })
                     .foregroundColor(Color.black)
                     .background(Color(hex: "F0EFF5"))
@@ -92,7 +108,9 @@ struct CreateView: View {
                 }
             }
             HStack{
-                Button(action: {}, label: {
+                Button(action: {
+                    imageData = selectType(Front: UIImage(), Back: UIImage(), Left: UIImage(), Right: UIImage(), Top: UIImage(), Bottom: UIImage())
+                }, label: {
                     Text("Clear")
                 })
             }
@@ -104,4 +122,13 @@ struct CreateView_Previews: PreviewProvider {
     static var previews: some View {
         CreateView()
     }
+}
+
+struct selectType{
+    var Front:UIImage
+    var Back:UIImage
+    var Left:UIImage
+    var Right:UIImage
+    var Top:UIImage
+    var Bottom:UIImage
 }
