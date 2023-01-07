@@ -7,18 +7,51 @@
 
 import SwiftUI
 
+enum ActiveSheet: Identifiable {
+    case first, second
+    
+    var id: Int {
+        hashValue
+    }
+}
+
 struct CreateView: View {
     
-    @State var imageData:selectType = selectType(Front: UIImage(), Back: UIImage(), Left: UIImage(), Right: UIImage(), Top: UIImage(), Bottom: UIImage())
+    @State var imageData:selectType = selectType()
     
-    @State private var isShowPhotoLibrary = false
-
+    @State var toDrawing: Bool = false
+    @State var toSelectPhoto: Bool = false
+    
+    @State var activeSheet: ActiveSheet?
+    
     var body: some View {
         VStack{
             HStack{
                 VStack{
                     Button(action: {
-                        isShowPhotoLibrary = true
+                        activeSheet = .first
+                    }, label: {
+                        VStack{
+                            if(imageData.Top.size != .zero){
+                                Image(uiImage: imageData.Top)
+                                    .resizable()
+                            }else{
+                                Image(systemName: "plus.app")
+                                    .resizable()
+                                    .frame(width: 32.0, height: 32.0)
+                            }
+                            
+                        }.frame(width: 80, height: 80, alignment: .center)
+                    })
+                    .foregroundColor(Color.black)
+                    .background(Color(hex: "F0EFF5"))
+                    Text("Top")
+                }
+            }
+            HStack{
+                VStack{
+                    Button(action: {
+                        activeSheet = .second
                     }, label: {
                         VStack{
                             if(imageData.Front.size != .zero){
@@ -29,24 +62,7 @@ struct CreateView: View {
                                     .resizable()
                                     .frame(width: 32.0, height: 32.0)
                             }
-
-                        }.frame(width: 80, height: 80, alignment: .center)
-                    })
-                    .foregroundColor(Color.black)
-                    .background(Color(hex: "F0EFF5"))
-                    .sheet(isPresented: $isShowPhotoLibrary) {
-                        ImagePicker(sourceType: .photoLibrary, selectedImage: self.$imageData.Front)
-                    }
-                    Text("Top")
-                }
-            }
-            HStack{
-                VStack{
-                    Button(action: {}, label: {
-                        VStack{
-                            Image(systemName: "plus.app")
-                                .resizable()
-                                .frame(width: 32.0, height: 32.0)
+                            
                         }.frame(width: 80, height: 120, alignment: .center)
                     })
                     .foregroundColor(Color.black)
@@ -95,12 +111,21 @@ struct CreateView: View {
             }
             HStack{
                 VStack{
-                    Button(action: {}, label: {
+                    Button(action: {
+
+                        print(imageData)
+                    }, label: {
                         VStack{
-                            Image(systemName: "plus.app")
-                                .resizable()
-                                .frame(width: 32.0, height: 32.0)
-                        }.frame(width: 80, height: 80, alignment: .center)
+                            if(imageData.Bottom.size != .zero){
+                                Image(uiImage: imageData.Bottom)
+                                    .resizable()
+                            }else{
+                                Image(systemName: "plus.app")
+                                    .resizable()
+                                    .frame(width: 32.0, height: 32.0)
+                            }
+                            
+                        }.frame(width: 80, height: 120, alignment: .center)
                     })
                     .foregroundColor(Color.black)
                     .background(Color(hex: "F0EFF5"))
@@ -115,6 +140,14 @@ struct CreateView: View {
                 })
             }
         }
+        .sheet(item: $activeSheet) { item in
+            switch item {
+            case .first:
+                sheetView_CreateView(imageData: $imageData.Top, toDrawing: $toDrawing, toSelectPhoto: $toSelectPhoto)
+            case .second:
+                sheetView_CreateView(imageData: $imageData.Front, toDrawing: $toDrawing, toSelectPhoto: $toSelectPhoto)
+            }
+        }
     }
 }
 
@@ -125,10 +158,57 @@ struct CreateView_Previews: PreviewProvider {
 }
 
 struct selectType{
-    var Front:UIImage
-    var Back:UIImage
-    var Left:UIImage
-    var Right:UIImage
-    var Top:UIImage
-    var Bottom:UIImage
+    var Front:UIImage = UIImage()
+    var Back:UIImage = UIImage()
+    var Left:UIImage = UIImage()
+    var Right:UIImage = UIImage()
+    var Top:UIImage = UIImage()
+    var Bottom:UIImage = UIImage()
+}
+
+struct sheetView_CreateView:View{
+    @Binding var imageData: UIImage
+    @Binding var toDrawing: Bool
+    @Binding var toSelectPhoto: Bool
+    
+    var body: some View{
+        NavigationStack {
+            HStack(spacing: 0) {
+                VStack {
+                    Button(action: {
+                        toDrawing = true
+                    }, label: {
+                        Text("Drawing")
+                            .font(.body)
+                            .padding()
+                    })
+                    .buttonStyle(.borderedProminent)
+                }
+                .frame(minWidth: 0, maxWidth: .infinity)
+                
+                
+                VStack {
+                    Button(action: {
+                        toSelectPhoto = true
+                    }, label: {
+                        Text("Photo")
+                            .font(.body)
+                            .padding()
+                    })
+                    .buttonStyle(.borderedProminent)
+                }
+                .frame(minWidth: 0, maxWidth: .infinity)
+                
+                
+            }
+            .frame(minWidth: 0, maxWidth: .infinity)
+            .navigationTitle("Select image")
+            .navigationDestination(isPresented: $toDrawing) {
+                DrawingView()
+            }
+            .navigationDestination(isPresented: $toSelectPhoto) {
+                ImagePicker(sourceType: .photoLibrary, selectedImage: self.$imageData)
+            }
+        }
+    }
 }
