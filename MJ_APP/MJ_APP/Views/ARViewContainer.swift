@@ -12,20 +12,7 @@ import FocusEntity
 struct ARViewContainer: UIViewRepresentable {
     
     func makeUIView(context: Context) -> ARView {
-        
-        //        let arView = ARView(frame: .zero)
-        //        let anchor = AnchorEntity(plane: .horizontal)
-        //
-        //        let sphere = MeshResource.generateSphere(radius: 0.05)
-        //        let material = SimpleMaterial(color: .red,roughness: 0, isMetallic: true)
-        //
-        //        let box = ModelEntity(mesh: sphere, materials: [material])
-        //
-        //        anchor.addChild(box)
-        //
-        //        arView.scene.anchors.append(anchor)
-        //
-        
+
         let view = ARView()
         // Start AR session
         let session = view.session
@@ -39,12 +26,7 @@ struct ARViewContainer: UIViewRepresentable {
         coachingOverlay.session = session
         coachingOverlay.goal = .horizontalPlane
         view.addSubview(coachingOverlay)
-        
-        // Set debug options
-#if DEBUG
-        //        view.debugOptions = [.showFeaturePoints, .showAnchorOrigins, .showAnchorGeometry]
-#endif
-        
+
         // Handle ARSession events via delegate
         context.coordinator.view = view
         session.delegate = context.coordinator
@@ -58,8 +40,7 @@ struct ARViewContainer: UIViewRepresentable {
         )
         
         return view
-        //        return arView
-        
+
     }
     
     func makeCoordinator() -> Coordinator {
@@ -103,15 +84,9 @@ struct ARViewContainer: UIViewRepresentable {
     
 }
 
-struct ARPageView: View {
-    var body: some View {
-        Text("hi")
-    }
-}
-
-struct ARPageView_Previews: PreviewProvider {
+struct ARViewContainer_Previews: PreviewProvider {
     static var previews: some View {
-        ARPageView()
+        ARViewContainer()
     }
 }
 

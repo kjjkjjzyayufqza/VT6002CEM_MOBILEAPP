@@ -12,6 +12,8 @@ struct SceneView: UIViewRepresentable {
     
     var scene:SCNScene? = .init(named: "Mahjong.usdz")
     
+    var imageData:SixFcaeType? = SixFcaeType()
+    
     func makeUIView(context: Context) -> some UIView {
         
 //        let node = scene?.rootNode.childNode(withName: "Tomato", recursively: true)
@@ -23,7 +25,32 @@ struct SceneView: UIViewRepresentable {
         view.autoenablesDefaultLighting = true
         view.antialiasingMode = .multisampling2X
         view.scene = scene
-        view.backgroundColor = .clear
+        view.backgroundColor = .gray
+        
+        let cameraNode = SCNNode()
+        cameraNode.camera = SCNCamera()
+        
+        view.scene?.rootNode.addChildNode(cameraNode)
+        view.pointOfView = cameraNode
+
+        cameraNode.position = SCNVector3(0,15,60)
+        
+        
+        let node = scene?.rootNode.childNode(withName: "RootNode", recursively: true)
+        node?.eulerAngles.y = 0.7
+        
+        if(imageData?.Top.size != .zero){
+            
+            let translation = SCNMatrix4MakeTranslation(0, 0, 0)
+            let rotation = SCNMatrix4MakeRotation(Float.pi / 1, 1, 0, 0)
+            let transform = SCNMatrix4Mult(translation, rotation)
+
+            let frontNode = scene?.rootNode.childNode(withName: "FRONT", recursively: true)
+            frontNode?.childNodes[0].childNodes[0].geometry?.materials[0].diffuse.contents = imageData?.Top
+            
+            frontNode?.childNodes[0].childNodes[0].geometry?.materials[0].diffuse.contentsTransform = transform
+        }
+        
         return view
     }
     

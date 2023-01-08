@@ -52,7 +52,7 @@ struct ContentView: View {
                 case 1:
                     NavigationStack {
                         VStack{
-                            ImagePickerView()
+                            SceneView()
                             
                         }.navigationTitle("Title 2")
                     }
