@@ -16,8 +16,11 @@ struct DrawingView: View {
     
     @State var showingAlert = false
     
-    
     @State private var showSheet = false
+    @State private var showEmptyAlert = false
+    
+    var onSelect: (_:UIImage) -> Void
+    
     var body: some View {
         NavigationView{
             VStack{
@@ -29,35 +32,46 @@ struct DrawingView: View {
                                 HStack{
                                     Text(drawing.title ?? "Untitled")
                                     Spacer()
+
+                                    
                                     Button(action: {
                                         do{
-                                            let data:Data! = drawing.canvasData
-                                            let a = try PKDrawing(data: data)
-                                            let image = a.image(from: a.bounds, scale: 1)
-                                            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-                                            showingAlert = true
+                                            if((drawing.canvasData?.isEmpty) != nil){
+                                                let data:Data! = drawing.canvasData
+                                                let temp = try PKDrawing(data: data)
+                                                let image = temp.image(from: temp.bounds, scale: 1)
+                                                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                                                showingAlert = true
+                                            }else{
+                                                showEmptyAlert = true
+                                            }
                                         }catch{
                                             
                                         }
                                     }, label: {
-                                        Text("Save")
                                         Image(systemName: "square.and.arrow.down")
-                                        
                                     }).alert("Save to photo done", isPresented: $showingAlert) {
                                         Button("OK", role: .cancel) { }
                                     }
+                                    .frame(height: 20)
                                     .padding(.all,10)
                                     .foregroundColor(.white)
                                     .background(Color.blue)
                                     .cornerRadius(10)
                                     .shadow(radius: 2)
                                     .buttonStyle(.plain)
+                                    
+                                    
                                 }
                             })
                         }
-
+                        
                     }
                     .onDelete(perform: deleteItem)
+                    .alert("Empty drawings cannot be selected and saved", isPresented: $showEmptyAlert) {
+                        Button("OK", role: .cancel) { }
+                    }
+                    
                     Button(action: {
                         self.showSheet.toggle()
                     }, label: {
@@ -75,9 +89,9 @@ struct DrawingView: View {
                 .toolbar {
                     EditButton()
                 }
-//                .scrollContentBackground(.hidden)
+                //                .scrollContentBackground(.hidden)
             }
-
+            
             VStack{
                 Image(systemName: "scribble.variable")
                     .font(.largeTitle)
@@ -107,6 +121,8 @@ struct DrawingView: View {
 
 struct DrawingView_Previews: PreviewProvider {
     static var previews: some View {
-        DrawingView()
+        DrawingView { image in
+            print("hi")
+        }
     }
 }

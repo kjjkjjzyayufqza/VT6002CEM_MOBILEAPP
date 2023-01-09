@@ -18,10 +18,7 @@ enum ActiveSheet: Identifiable {
 struct CreateView: View {
     
     @State var imageData:SixFcaeType = SixFcaeType()
-    
-    @State var toDrawing: Bool = false
-    @State var toSelectPhoto: Bool = false
-    
+
     @State var activeSheet: ActiveSheet?
     
     @State var isShowPreview:Bool = false
@@ -43,6 +40,7 @@ struct CreateView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                         
                     })
+                    .padding(.trailing,10)
                     .sheet(isPresented: $isShowPreview, content: {
                         SceneMainView(isShowGoARView: false, imageData: imageData)
                     })
@@ -75,16 +73,42 @@ struct CreateView: View {
                 }
                 HStack{
                     VStack{
-                        
+                        Button(action: {
+                            activeSheet = .Front
+                            
+                        }, label: {
+                            VStack{
+                                if(imageData.Front.size != .zero){
+                                    Image(uiImage: imageData.Front)
+                                        .resizable()
+                                }else{
+                                    Image(systemName: "plus.app")
+                                        .resizable()
+                                        .frame(width: 32.0, height: 32.0)
+                                }
+                                
+                            }.frame(width: 80, height: 120, alignment: .center)
+                        })
+                        .foregroundColor(Color.black)
+                        .background(Color(hex: "F0EFF5"))
                         Text("Front")
                     }
                     
                     VStack{
-                        Button(action: {}, label: {
+                        Button(action: {
+                            activeSheet = .Back
+                            
+                        }, label: {
                             VStack{
-                                Image(systemName: "plus.app")
-                                    .resizable()
-                                    .frame(width: 32.0, height: 32.0)
+                                if(imageData.Back.size != .zero){
+                                    Image(uiImage: imageData.Back)
+                                        .resizable()
+                                }else{
+                                    Image(systemName: "plus.app")
+                                        .resizable()
+                                        .frame(width: 32.0, height: 32.0)
+                                }
+                                
                             }.frame(width: 80, height: 120, alignment: .center)
                         })
                         .foregroundColor(Color.black)
@@ -93,11 +117,20 @@ struct CreateView: View {
                     }
                     
                     VStack{
-                        Button(action: {}, label: {
+                        Button(action: {
+                            activeSheet = .Left
+                            
+                        }, label: {
                             VStack{
-                                Image(systemName: "plus.app")
-                                    .resizable()
-                                    .frame(width: 32.0, height: 32.0)
+                                if(imageData.Left.size != .zero){
+                                    Image(uiImage: imageData.Left)
+                                        .resizable()
+                                }else{
+                                    Image(systemName: "plus.app")
+                                        .resizable()
+                                        .frame(width: 32.0, height: 32.0)
+                                }
+                                
                             }.frame(width: 80, height: 120, alignment: .center)
                         })
                         .foregroundColor(Color.black)
@@ -106,11 +139,20 @@ struct CreateView: View {
                     }
                     
                     VStack{
-                        Button(action: {}, label: {
+                        Button(action: {
+                            activeSheet = .Right
+                            
+                        }, label: {
                             VStack{
-                                Image(systemName: "plus.app")
-                                    .resizable()
-                                    .frame(width: 32.0, height: 32.0)
+                                if(imageData.Right.size != .zero){
+                                    Image(uiImage: imageData.Right)
+                                        .resizable()
+                                }else{
+                                    Image(systemName: "plus.app")
+                                        .resizable()
+                                        .frame(width: 32.0, height: 32.0)
+                                }
+                                
                             }.frame(width: 80, height: 120, alignment: .center)
                         })
                         .foregroundColor(Color.black)
@@ -121,8 +163,8 @@ struct CreateView: View {
                 HStack{
                     VStack{
                         Button(action: {
+                            activeSheet = .Bottom
                             
-                            print(imageData)
                         }, label: {
                             VStack{
                                 if(imageData.Bottom.size != .zero){
@@ -146,7 +188,7 @@ struct CreateView: View {
                         
                     }, label: {
                         NavigationLink(destination: {
-                            SceneMainView(isShowGoARView: true)
+                            SceneMainView(isShowGoARView: true,imageData: imageData)
                         }, label: {
                             Text("Next")
                         })
@@ -175,9 +217,18 @@ struct CreateView: View {
             .sheet(item: $activeSheet) { item in
                 switch item {
                 case .Top:
-                    sheetView_CreateView(imageData: $imageData.Top, toDrawing: $toDrawing, toSelectPhoto: $toSelectPhoto)
-                default:
-                    Text("hi")
+                    sheetView_CreateView(imageData: $imageData.Top)
+                case .Bottom:
+                    sheetView_CreateView(imageData: $imageData.Bottom)
+                case .Front:
+                    sheetView_CreateView(imageData: $imageData.Front)
+                case .Back:
+                    sheetView_CreateView(imageData: $imageData.Back)
+                case .Left:
+                    sheetView_CreateView(imageData: $imageData.Left)
+                case .Right:
+                    sheetView_CreateView(imageData: $imageData.Right)
+
                 }
             }
             
@@ -204,19 +255,27 @@ struct SixFcaeType{
 
 struct sheetView_CreateView:View{
     @Binding var imageData: UIImage
-    @Binding var toDrawing: Bool
-    @Binding var toSelectPhoto: Bool
-    
+
     var body: some View{
         NavigationStack {
             HStack(spacing: 0) {
                 VStack {
+                    
                     Button(action: {
-                        toDrawing = true
+
                     }, label: {
-                        Text("Drawing")
-                            .font(.body)
-                            .padding()
+                        NavigationLink(destination: {
+                            SelectDrawingView { UIImage in
+                                imageData = UIImage
+                                print(UIImage)
+                            }
+                        }, label: {
+                            Text("Drawing")
+                                .foregroundColor(.white)
+                                .font(.body)
+                                .padding()
+                        })
+
                     })
                     .buttonStyle(.borderedProminent)
                 }
@@ -225,11 +284,17 @@ struct sheetView_CreateView:View{
                 
                 VStack {
                     Button(action: {
-                        toSelectPhoto = true
+
                     }, label: {
-                        Text("Photo")
-                            .font(.body)
-                            .padding()
+                        NavigationLink(destination: {
+                            ImagePicker(sourceType: .photoLibrary, selectedImage: self.$imageData)
+                        }, label: {
+                            Text("Photo")
+                                .foregroundColor(.white)
+                                .font(.body)
+                                .padding()
+                        })
+
                     })
                     .buttonStyle(.borderedProminent)
                     
@@ -240,12 +305,6 @@ struct sheetView_CreateView:View{
             }
             .frame(minWidth: 0, maxWidth: .infinity)
             .navigationTitle("Select image")
-            .navigationDestination(isPresented: $toDrawing) {
-                DrawingView()
-            }
-            .navigationDestination(isPresented: $toSelectPhoto) {
-                ImagePicker(sourceType: .photoLibrary, selectedImage: self.$imageData)
-            }
         }
     }
 }

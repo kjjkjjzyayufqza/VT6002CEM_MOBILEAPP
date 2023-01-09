@@ -16,9 +16,13 @@ struct DisplayDrawing: View {
     @State var title:String?
     var body: some View {
         VStack{
-            DrawingCanvasView(data: data ?? Data(), id: id ?? UUID())
-                .environment(\.managedObjectContext, viewContext)
-                .navigationBarTitle(title ?? "Untitled",displayMode: .inline)
+            GeometryReader(content: { geometry in
+                DrawingCanvasView(data: data ?? Data(), id: id ?? UUID())
+                    .environment(\.managedObjectContext, viewContext)
+                    .navigationBarTitle(title ?? "Untitled",displayMode: .inline)
+
+            })
+
         }
     }
 }

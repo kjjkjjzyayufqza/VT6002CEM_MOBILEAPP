@@ -19,6 +19,9 @@
 		8461B72F2967F25400ECDF8E /* LocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8461B72E2967F25400ECDF8E /* LocationView.swift */; };
 		847425FA2965B9AC0009D4B7 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847425F92965B9AC0009D4B7 /* HomeView.swift */; };
 		847425FE2965CBBF0009D4B7 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847425FD2965CBBF0009D4B7 /* DetailView.swift */; };
+		84744352296BF11500DDF237 /* SelectDrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84744351296BF11500DDF237 /* SelectDrawingView.swift */; };
+		84744354296C3BC800DDF237 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84744353296C3BC800DDF237 /* MainView.swift */; };
+		84744357296C3CE800DDF237 /* LoginVie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84744356296C3CE800DDF237 /* LoginVie.swift */; };
 		84863C6B29635664000F6303 /* MJ_APPApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84863C6A29635664000F6303 /* MJ_APPApp.swift */; };
 		84863C6D29635664000F6303 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84863C6C29635664000F6303 /* ContentView.swift */; };
 		84863C6F29635664000F6303 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84863C6E29635664000F6303 /* Assets.xcassets */; };
@@ -45,6 +48,9 @@
 		8461B72E2967F25400ECDF8E /* LocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationView.swift; sourceTree = "<group>"; };
 		847425F92965B9AC0009D4B7 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		847425FD2965CBBF0009D4B7 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
+		84744351296BF11500DDF237 /* SelectDrawingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDrawingView.swift; sourceTree = "<group>"; };
+		84744353296C3BC800DDF237 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		84744356296C3CE800DDF237 /* LoginVie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVie.swift; sourceTree = "<group>"; };
 		84863C6729635664000F6303 /* MJ_APP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MJ_APP.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84863C6A29635664000F6303 /* MJ_APPApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MJ_APPApp.swift; sourceTree = "<group>"; };
 		84863C6C29635664000F6303 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -78,6 +84,14 @@
 				8440660B29686A6D007E74DF /* Mahjong.usdz */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		84744355296C3CDC00DDF237 /* LoginView */ = {
+			isa = PBXGroup;
+			children = (
+				84744356296C3CE800DDF237 /* LoginVie.swift */,
+			);
+			path = LoginView;
 			sourceTree = "<group>";
 		};
 		84863C5E29635664000F6303 = {
@@ -134,6 +148,7 @@
 		84863C80296356DC000F6303 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				84744355296C3CDC00DDF237 /* LoginView */,
 				84A9DBC52963DB9700B1908D /* Canvas */,
 				84863C81296356E9000F6303 /* DrawingView.swift */,
 				84863C83296356FD000F6303 /* AddNewCanvasViews.swift */,
@@ -144,6 +159,8 @@
 				8461B72E2967F25400ECDF8E /* LocationView.swift */,
 				840D61712968208F00D5BD38 /* ARViewContainer.swift */,
 				842C12F8296AADF10001CA96 /* SceneMainView.swift */,
+				84744351296BF11500DDF237 /* SelectDrawingView.swift */,
+				84744353296C3BC800DDF237 /* MainView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -236,14 +253,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				84863C7429635664000F6303 /* Persistence.swift in Sources */,
+				84744357296C3CE800DDF237 /* LoginVie.swift in Sources */,
 				847425FE2965CBBF0009D4B7 /* DetailView.swift in Sources */,
 				84A9DBC72963DBCC00B1908D /* DrawingCanvasViewController.swift in Sources */,
 				84863C84296356FD000F6303 /* AddNewCanvasViews.swift in Sources */,
 				845DC13A2966A7860082ADBD /* CreateView.swift in Sources */,
 				84188BC02965F5010005E3FA /* SceneView.swift in Sources */,
 				8461B72F2967F25400ECDF8E /* LocationView.swift in Sources */,
+				84744354296C3BC800DDF237 /* MainView.swift in Sources */,
 				84863C6D29635664000F6303 /* ContentView.swift in Sources */,
 				840D617029680C0200D5BD38 /* MapPinCardView.swift in Sources */,
+				84744352296BF11500DDF237 /* SelectDrawingView.swift in Sources */,
 				84863C7729635664000F6303 /* MJ_APP_DATA.xcdatamodeld in Sources */,
 				840D61722968208F00D5BD38 /* ARViewContainer.swift in Sources */,
 				847425FA2965B9AC0009D4B7 /* HomeView.swift in Sources */,

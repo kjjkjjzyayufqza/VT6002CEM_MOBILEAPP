@@ -15,11 +15,7 @@ struct SceneView: UIViewRepresentable {
     var imageData:SixFcaeType? = SixFcaeType()
     
     func makeUIView(context: Context) -> some UIView {
-        
-//        let node = scene?.rootNode.childNode(withName: "Tomato", recursively: true)
-//        node?.childNodes[0].childNodes[0].geometry?.firstMaterial?.diffuse.contents = UIColor.green
-//        print(node?.childNodes[0])
-        
+
         let view = SCNView()
         view.allowsCameraControl = true
         view.autoenablesDefaultLighting = true
@@ -45,8 +41,68 @@ struct SceneView: UIViewRepresentable {
             let rotation = SCNMatrix4MakeRotation(Float.pi / 1, 1, 0, 0)
             let transform = SCNMatrix4Mult(translation, rotation)
 
-            let frontNode = scene?.rootNode.childNode(withName: "FRONT", recursively: true)
+            let frontNode = scene?.rootNode.childNode(withName: "TOP", recursively: true)
             frontNode?.childNodes[0].childNodes[0].geometry?.materials[0].diffuse.contents = imageData?.Top
+            
+            frontNode?.childNodes[0].childNodes[0].geometry?.materials[0].diffuse.contentsTransform = transform
+        }
+        
+        if(imageData?.Bottom.size != .zero){
+            
+            let translation = SCNMatrix4MakeTranslation(0, 0, 0)
+            let rotation = SCNMatrix4MakeRotation(Float.pi / 1, 1, 0, 0)
+            let transform = SCNMatrix4Mult(translation, rotation)
+
+            let frontNode = scene?.rootNode.childNode(withName: "BOTTOM", recursively: true)
+            frontNode?.childNodes[0].childNodes[0].geometry?.materials[0].diffuse.contents = imageData?.Bottom
+            
+            frontNode?.childNodes[0].childNodes[0].geometry?.materials[0].diffuse.contentsTransform = transform
+        }
+        
+        if(imageData?.Front.size != .zero){
+            
+            let translation = SCNMatrix4MakeTranslation(0, 0, 0)
+            let rotation = SCNMatrix4MakeRotation(Float.pi / 1, 1, 0, 0)
+            let transform = SCNMatrix4Mult(translation, rotation)
+
+            let frontNode = scene?.rootNode.childNode(withName: "FRONT", recursively: true)
+            frontNode?.childNodes[0].childNodes[0].geometry?.materials[0].diffuse.contents = imageData?.Front
+            
+            frontNode?.childNodes[0].childNodes[0].geometry?.materials[0].diffuse.contentsTransform = transform
+        }
+        
+        if(imageData?.Back.size != .zero){
+            
+            let translation = SCNMatrix4MakeTranslation(0, 0, 0)
+            let rotation = SCNMatrix4MakeRotation(Float.pi / 1, 1, 0, 0)
+            let transform = SCNMatrix4Mult(translation, rotation)
+
+            let frontNode = scene?.rootNode.childNode(withName: "BACK", recursively: true)
+            frontNode?.childNodes[0].childNodes[0].geometry?.materials[0].diffuse.contents = imageData?.Back
+            
+            frontNode?.childNodes[0].childNodes[0].geometry?.materials[0].diffuse.contentsTransform = transform
+        }
+        
+        if(imageData?.Left.size != .zero){
+            
+            let translation = SCNMatrix4MakeTranslation(0, 0, 0)
+            let rotation = SCNMatrix4MakeRotation(Float.pi / 1, 1, 0, 0)
+            let transform = SCNMatrix4Mult(translation, rotation)
+
+            let frontNode = scene?.rootNode.childNode(withName: "LEFT", recursively: true)
+            frontNode?.childNodes[0].childNodes[0].geometry?.materials[0].diffuse.contents = imageData?.Left
+            
+            frontNode?.childNodes[0].childNodes[0].geometry?.materials[0].diffuse.contentsTransform = transform
+        }
+        
+        if(imageData?.Right.size != .zero){
+            
+            let translation = SCNMatrix4MakeTranslation(0, 0, 0)
+            let rotation = SCNMatrix4MakeRotation(Float.pi / 1, 1, 0, 0)
+            let transform = SCNMatrix4Mult(translation, rotation)
+
+            let frontNode = scene?.rootNode.childNode(withName: "RIGHT", recursively: true)
+            frontNode?.childNodes[0].childNodes[0].geometry?.materials[0].diffuse.contents = imageData?.Right
             
             frontNode?.childNodes[0].childNodes[0].geometry?.materials[0].diffuse.contentsTransform = transform
         }
