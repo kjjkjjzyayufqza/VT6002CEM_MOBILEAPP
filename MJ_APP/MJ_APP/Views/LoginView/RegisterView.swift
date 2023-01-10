@@ -12,7 +12,7 @@ struct RegisterView: View {
     @State var email:String = ""
     @State var password:String = ""
     @State var rePassword:String = ""
-    
+    var network = Network()
     var body: some View {
         ZStack{
             Color(hex: "FFFFFF").edgesIgnoringSafeArea(.all)
