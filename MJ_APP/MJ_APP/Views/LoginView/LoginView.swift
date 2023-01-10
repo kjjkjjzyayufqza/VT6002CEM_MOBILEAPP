@@ -44,19 +44,8 @@ struct LoginView: View {
                         
                         
                         largeBtn(title: "Guest", backgroudColor: "FFFFFF", textColor: "000000", onClick: {
-                            
-                            //save to core data
-                            
-                            let Authorization = Authorization(context: self.moc)
-                            Authorization.isLoging = true
-                            Authorization.isGuest = true
-                            do {
-                                try self.moc.save()
-                            } catch {
-                                
-                            }
-                            print(authorizationData.count)
-                            
+                            isActive_main = true
+
                         })
                     }
                     

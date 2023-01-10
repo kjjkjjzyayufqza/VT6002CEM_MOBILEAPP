@@ -79,43 +79,40 @@ struct ARViewContainer: UIViewRepresentable {
     static func makeEntity()-> ModelEntity{
         let MahjongEntity = try! ModelEntity.loadModel(named: "Mahjong.usdz")
         var material = SimpleMaterial()
-        
-        @Environment(\.managedObjectContext) var viewContext
-        
-        @FetchRequest(entity: TempImageData.entity(), sortDescriptors: [], predicate: nil) var tempImageData: FetchedResults<TempImageData>
-        
-        do{
-            if(tempImageData.first?.front?.isEmpty != nil){
-                
-                let data:Data = (tempImageData.first?.front)!
-                let temp = try PKDrawing(data: data)
-                let image = temp.image(from: temp.bounds, scale: 1)
-                
-                //change to jpg and uiimage
-                let jpgData = image.jpegData(compressionQuality: 1)!
-                let toUIimage:UIImage? = UIImage(data: jpgData)!
-                
-                let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("temp.jpg")
-                
-                
-                if ((try? jpgData.write(to: url)) != nil), // temporarily save the image data locally
-                   let texture = try? TextureResource.load(contentsOf: url) {
-                    var imageMaterial = UnlitMaterial()
-                    imageMaterial.baseColor = MaterialColorParameter.texture(texture)
-                    MahjongEntity.model?.materials[0] = imageMaterial
-                }
-                
-            }
-        }catch{
-            
+
+        let emptyUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("empty.png")
+
+        //0 is front, 1 is back,2 is right, 3 is left, 4 is top, 5 is bottom
+
+        if let texture = try? TextureResource.load(contentsOf: loadImageFromDiskWith(fileName: "FRONT.jpg") ?? emptyUrl) {
+            material.baseColor = MaterialColorParameter.texture(texture)
+            MahjongEntity.model?.materials[0] = material
         }
         
+        if let texture = try? TextureResource.load(contentsOf: loadImageFromDiskWith(fileName: "BACK.jpg") ?? emptyUrl) {
+            material.baseColor = MaterialColorParameter.texture(texture)
+            MahjongEntity.model?.materials[1] = material
+        }
         
+        if let texture = try? TextureResource.load(contentsOf: loadImageFromDiskWith(fileName: "TOP.jpg") ?? emptyUrl) {
+            material.baseColor = MaterialColorParameter.texture(texture)
+            MahjongEntity.model?.materials[4] = material
+        }
         
+        if let texture = try? TextureResource.load(contentsOf: loadImageFromDiskWith(fileName: "BOTTOM.jpg") ?? emptyUrl) {
+            material.baseColor = MaterialColorParameter.texture(texture)
+            MahjongEntity.model?.materials[5] = material
+        }
         
-        //0 is front, 1 is back,2 is right, 3 is left, 4 is top, 5 is bottom
-        //        MahjongEntity.model?.materials[0] = material
+        if let texture = try? TextureResource.load(contentsOf: loadImageFromDiskWith(fileName: "LEFT.jpg") ?? emptyUrl) {
+            material.baseColor = MaterialColorParameter.texture(texture)
+            MahjongEntity.model?.materials[3] = material
+        }
         
+        if let texture = try? TextureResource.load(contentsOf: loadImageFromDiskWith(fileName: "RIGHT.jpg") ?? emptyUrl) {
+            material.baseColor = MaterialColorParameter.texture(texture)
+            MahjongEntity.model?.materials[2] = material
+        }
         
         MahjongEntity.scale = [0.001, 0.001, 0.001]
         
@@ -126,6 +123,20 @@ struct ARViewContainer: UIViewRepresentable {
     func updateUIView(_ uiView: ARView, context: Context) {
         
     }
-    
+    static func loadImageFromDiskWith(fileName: String) -> URL? {
+        
+        let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
+        
+        let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+        let paths = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
+        
+        if let dirPath = paths.first {
+            let imageUrl = URL(fileURLWithPath: dirPath).appendingPathComponent(fileName)
+            return imageUrl
+            
+        }
+        
+        return nil
+    }
 }
 
