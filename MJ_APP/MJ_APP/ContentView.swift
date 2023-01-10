@@ -21,7 +21,7 @@ struct ContentView: View {
     @FetchRequest(entity: Authorization.entity(), sortDescriptors: [], predicate: nil) var authorizationData: FetchedResults<Authorization>
 
     var body: some View {
-        Text("hi")
+        CreateView()
     }
 }
 

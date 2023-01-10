@@ -18,12 +18,16 @@ enum ActiveSheet: Identifiable {
 struct CreateView: View {
     
     @State var imageData:SixFcaeType = SixFcaeType()
-
+    
     @State var activeSheet: ActiveSheet?
     
     @State var isShowPreview:Bool = false
     
     @State var nextTo3DPageView:Bool = false
+    
+    @Environment(\.managedObjectContext) var viewContext
+    
+    @FetchRequest(entity: TempImageData.entity(), sortDescriptors: [], predicate: nil) var tempImageData: FetchedResults<TempImageData>
     
     var body: some View {
         NavigationStack{
@@ -52,7 +56,6 @@ struct CreateView: View {
                     VStack{
                         Button(action: {
                             activeSheet = .Top
-                            
                         }, label: {
                             VStack{
                                 if(imageData.Top.size != .zero){
@@ -191,6 +194,15 @@ struct CreateView: View {
                             SceneMainView(isShowGoARView: true,imageData: imageData)
                         }, label: {
                             Text("Next")
+                        }).simultaneousGesture(TapGesture().onEnded{
+                            let tempFront = TempImageData(context: self.viewContext)
+                            tempFront.front = imageData.Front.jpegData(compressionQuality: 1)
+                            do {
+                                try self.viewContext.save()
+                                print("save done")
+                            } catch {
+                                
+                            }
                         })
                     })
                     .padding()
@@ -228,7 +240,7 @@ struct CreateView: View {
                     sheetView_CreateView(imageData: $imageData.Left)
                 case .Right:
                     sheetView_CreateView(imageData: $imageData.Right)
-
+                    
                 }
             }
             
@@ -236,7 +248,10 @@ struct CreateView: View {
         }
         
     }
+
 }
+
+
 
 struct CreateView_Previews: PreviewProvider {
     static var previews: some View {
@@ -255,14 +270,14 @@ struct SixFcaeType{
 
 struct sheetView_CreateView:View{
     @Binding var imageData: UIImage
-
+    
     var body: some View{
         NavigationStack {
             HStack(spacing: 0) {
                 VStack {
                     
                     Button(action: {
-
+                        
                     }, label: {
                         NavigationLink(destination: {
                             SelectDrawingView { UIImage in
@@ -275,7 +290,7 @@ struct sheetView_CreateView:View{
                                 .font(.body)
                                 .padding()
                         })
-
+                        
                     })
                     .buttonStyle(.borderedProminent)
                 }
@@ -284,7 +299,7 @@ struct sheetView_CreateView:View{
                 
                 VStack {
                     Button(action: {
-
+                        
                     }, label: {
                         NavigationLink(destination: {
                             ImagePicker(sourceType: .photoLibrary, selectedImage: self.$imageData)
@@ -294,7 +309,7 @@ struct sheetView_CreateView:View{
                                 .font(.body)
                                 .padding()
                         })
-
+                        
                     })
                     .buttonStyle(.borderedProminent)
                     

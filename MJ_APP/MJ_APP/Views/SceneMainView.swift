@@ -6,12 +6,18 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct SceneMainView: View {
     var isShowGoARView:Bool? = true
     var isShowTitle:Bool? = true
     var imageData:SixFcaeType? = SixFcaeType()
 
+    @Environment(\.managedObjectContext) var viewContext
+    
+    @FetchRequest(entity: TempImageData.entity(), sortDescriptors: [], predicate: nil) var tempImageData: FetchedResults<TempImageData>
+    
+    
     var body: some View {
         NavigationStack{
             VStack{
@@ -25,12 +31,15 @@ struct SceneMainView: View {
                 
                 if isShowGoARView! {
                     Button(action: {
-                        
+
                     }, label: {
                         NavigationLink(destination: {
                             ARViewContainer()
                         }, label: {
                             Text("To AR View")
+                        })
+                        .simultaneousGesture(TapGesture().onEnded{
+                            print(tempImageData.first)
                         })
                     })
                     .font(.title2)

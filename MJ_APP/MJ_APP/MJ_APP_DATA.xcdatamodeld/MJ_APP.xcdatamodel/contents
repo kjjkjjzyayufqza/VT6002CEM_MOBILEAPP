@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="21G320" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Authorization" representedClassName="Authorization" syncable="YES" codeGenerationType="class">
-        <attribute name="isGuest" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="isGuest" optional="YES" attributeType="Boolean" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="isLoging" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="userName" optional="YES" attributeType="String"/>
     </entity>
     <entity name="Drawing" representedClassName="Drawing" syncable="YES" codeGenerationType="class">
         <attribute name="canvasData" optional="YES" attributeType="Binary"/>
@@ -12,5 +11,13 @@
     </entity>
     <entity name="Item" representedClassName="Item" syncable="YES" codeGenerationType="class">
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="TempImageData" representedClassName="TempImageData" syncable="YES" codeGenerationType="class">
+        <attribute name="back" optional="YES" attributeType="Binary"/>
+        <attribute name="bottom" optional="YES" attributeType="Binary"/>
+        <attribute name="front" optional="YES" attributeType="Binary"/>
+        <attribute name="left" optional="YES" attributeType="Binary"/>
+        <attribute name="right" optional="YES" attributeType="Binary"/>
+        <attribute name="top" optional="YES" attributeType="Binary"/>
     </entity>
 </model>

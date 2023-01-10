@@ -15,34 +15,58 @@ struct LoginView: View {
     
     @State var isActive_register = false
     @State var isActive_main = false
+    
+    @Environment(\.managedObjectContext) var moc
+    @FetchRequest(entity: Authorization.entity(), sortDescriptors: [], predicate: nil) var authorizationData: FetchedResults<Authorization>
+    
+    
+    
     var body: some View {
         NavigationStack{
-            ScrollView{
-                ZStack{
-                    Color(hex: "FFFFFF").edgesIgnoringSafeArea(.all)
-                    VStack{
-                        Spacer()
-                        Text("AR-Mahjong")
-                            .font(.title)
-                            .fontWeight(.bold)
-                        Image("loginPageIcon")
-                            .resizable()
-                            .frame(width: 200, height: 200)
-                        
-                        Spacer()
-                        
+            ZStack{
+                Color(hex: "FFFFFF").edgesIgnoringSafeArea(.all)
+                VStack{
+                    Spacer()
+                    Text("AR-Mahjong")
+                        .font(.title)
+                        .fontWeight(.bold)
+                    Image("loginPageIcon")
+                        .resizable()
+                        .frame(width: 200, height: 200)
+                    
+                    Spacer()
+                    
+                    if !isClickLogin{
                         largeBtn(title: "Sign in", backgroudColor: "007EFB", textColor: "FFFFFF", onClick: {
+
                             isClickLogin = true
-                            isActive_main = true
                         })
                         
                         
                         largeBtn(title: "Guest", backgroudColor: "FFFFFF", textColor: "000000", onClick: {
-                            isActive_register = true
+                            
+                            //save to core data
+                            
+                            let Authorization = Authorization(context: self.moc)
+                            Authorization.isLoging = true
+                            Authorization.isGuest = true
+                            do {
+                                try self.moc.save()
+                            } catch {
+                                
+                            }
+                            print(authorizationData.count)
+                            
                         })
-
-                        
+                    }
+                    
+                    if isClickLogin{
                         VStack{
+                            Text("Back")
+                                .foregroundColor(.blue)
+                                .onTapGesture {
+                                    isClickLogin = false
+                                }
                             SecureField("Email",text: $email)
                                 .font(.title3)
                                 .padding()
@@ -59,34 +83,38 @@ struct LoginView: View {
                                 .cornerRadius(50)
                                 .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
                             largeBtn(title: "Login", backgroudColor: "007EFB", textColor: "FFFFFF", onClick: {
-                                
+                                isActive_main = true
                             })
-
-
+                            
+                            
+                            
                         }
-                        
-                        HStack{
-                            Text("Not Account?")
-                            Text("Register")
-                                .foregroundColor(Color(hex: "007EFB"))
-                                .onTapGesture {
-                                    
-                                }
-                        }
-                        FooterView()
                     }
-                    .padding()
-
+                    
+                    HStack{
+                        Text("Not Account?")
+                        Text("Register")
+                            .foregroundColor(Color(hex: "007EFB"))
+                            .onTapGesture {
+                                isActive_register = true
+                            }
+                    }
+                    FooterView()
                 }
+                .padding()
+                
             }
             .navigationDestination(isPresented: $isActive_main) {
                 MainView().navigationBarBackButtonHidden(true)
             }
             .navigationDestination(isPresented: $isActive_register) {
                 RegisterView()
+                
             }
         }
+        
     }
+    
 }
 
 struct LoginView_Previews: PreviewProvider {
@@ -94,29 +122,4 @@ struct LoginView_Previews: PreviewProvider {
         LoginView()
     }
 }
-
-struct largeBtn:View{
-    var title:String
-    var backgroudColor:String
-    var textColor:String
-    var onClick: () -> Void
-
-    var body: some View{
-        Button(action: {
-            onClick()
-        }, label: {
-            Text(title)
-                .font(.title3)
-                .fontWeight(.bold)
-                .foregroundColor(Color(hex: textColor))
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color(hex: backgroudColor))
-                .cornerRadius(50)
-                .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
-        })
-        .padding(.vertical,10)
-    }
-}
-
 

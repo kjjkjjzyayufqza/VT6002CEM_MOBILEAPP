@@ -4,15 +4,15 @@
 //
 //  Created by admin on 6/1/2023.
 //
-
 import SwiftUI
 import RealityKit
 import ARKit
 import FocusEntity
+import PencilKit
 struct ARViewContainer: UIViewRepresentable {
     
     func makeUIView(context: Context) -> ARView {
-
+        
         let view = ARView()
         // Start AR session
         let session = view.session
@@ -26,7 +26,7 @@ struct ARViewContainer: UIViewRepresentable {
         coachingOverlay.session = session
         coachingOverlay.goal = .horizontalPlane
         view.addSubview(coachingOverlay)
-
+        
         // Handle ARSession events via delegate
         context.coordinator.view = view
         session.delegate = context.coordinator
@@ -40,7 +40,7 @@ struct ARViewContainer: UIViewRepresentable {
         )
         
         return view
-
+        
     }
     
     func makeCoordinator() -> Coordinator {
@@ -58,24 +58,69 @@ struct ARViewContainer: UIViewRepresentable {
         }
         
         @objc func handleTap() {
+            @FetchRequest(entity: Drawing.entity(), sortDescriptors: [], predicate: nil) var drawingData: FetchedResults<Drawing>
+            
             guard let view = self.view, let focusEntity = self.focusEntity else { return }
             
             // Create a new anchor to add content to
             let anchor = AnchorEntity()
             view.scene.anchors.append(anchor)
             
-            // Add a Box entity with a blue material
-            let diceEntity = try! ModelEntity.loadModel(named: "Mahjong.usdz")
+            // Ccreate a Entity
+            let MahjongEntity = makeEntity()
             
-            var material = SimpleMaterial()
-            material.baseColor = MaterialColorParameter.color(UIColor.white)
-            diceEntity.model?.materials[0] = material
+            // Set Entity position
+            MahjongEntity.position = focusEntity.position
             
-            diceEntity.scale = [0.001, 0.001, 0.001]
-            diceEntity.position = focusEntity.position
-            
-            anchor.addChild(diceEntity)
+            anchor.addChild(MahjongEntity)
         }
+    }
+    
+    static func makeEntity()-> ModelEntity{
+        let MahjongEntity = try! ModelEntity.loadModel(named: "Mahjong.usdz")
+        var material = SimpleMaterial()
+        
+        @Environment(\.managedObjectContext) var viewContext
+        
+        @FetchRequest(entity: TempImageData.entity(), sortDescriptors: [], predicate: nil) var tempImageData: FetchedResults<TempImageData>
+        
+        do{
+            if(tempImageData.first?.front?.isEmpty != nil){
+                
+                let data:Data = (tempImageData.first?.front)!
+                let temp = try PKDrawing(data: data)
+                let image = temp.image(from: temp.bounds, scale: 1)
+                
+                //change to jpg and uiimage
+                let jpgData = image.jpegData(compressionQuality: 1)!
+                let toUIimage:UIImage? = UIImage(data: jpgData)!
+                
+                let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("temp.jpg")
+                
+                
+                if ((try? jpgData.write(to: url)) != nil), // temporarily save the image data locally
+                   let texture = try? TextureResource.load(contentsOf: url) {
+                    var imageMaterial = UnlitMaterial()
+                    imageMaterial.baseColor = MaterialColorParameter.texture(texture)
+                    MahjongEntity.model?.materials[0] = imageMaterial
+                }
+                
+            }
+        }catch{
+            
+        }
+        
+        
+        
+        
+        //0 is front, 1 is back,2 is right, 3 is left, 4 is top, 5 is bottom
+        //        MahjongEntity.model?.materials[0] = material
+        
+        
+        MahjongEntity.scale = [0.001, 0.001, 0.001]
+        
+        
+        return MahjongEntity
     }
     
     func updateUIView(_ uiView: ARView, context: Context) {
@@ -83,11 +128,4 @@ struct ARViewContainer: UIViewRepresentable {
     }
     
 }
-
-struct ARViewContainer_Previews: PreviewProvider {
-    static var previews: some View {
-        ARViewContainer()
-    }
-}
-
 
