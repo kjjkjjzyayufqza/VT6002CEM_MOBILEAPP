@@ -6,21 +6,19 @@
 //
 
 import SwiftUI
-
+import CoreData
+import SceneKit
 struct ContentView: View {
+    @Environment(\.managedObjectContext) var moc
+    @FetchRequest(entity: Authorization.entity(), sortDescriptors: [], predicate: nil) var authorizationData: FetchedResults<Authorization>
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
-            Button(action: {
-                print("Hello World tapped!")
-            }) {
-                Text("Hello World")
-            }
+        if authorizationData.count > 0{
+            MainView()
+        }else{
+            LoginView()
         }
-        .padding()
+        
     }
 }
 
