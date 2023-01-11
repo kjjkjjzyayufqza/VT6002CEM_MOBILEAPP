@@ -17,6 +17,8 @@ struct SelectDrawingView: View {
     
     var onSelect: (_:UIImage) -> Void
     
+    @State var showingAlert:Bool = false
+    
     var body: some View {
         NavigationView{
             VStack{
@@ -40,6 +42,7 @@ struct SelectDrawingView: View {
                                         
                                         onSelect(toUIimage)
                                         print("Done")
+                                        showingAlert = true
                                     }else{
                                         showEmptyAlert = true
                                         print("Fail")
@@ -57,6 +60,9 @@ struct SelectDrawingView: View {
                             .cornerRadius(10)
                             .shadow(radius: 2)
                             .buttonStyle(.plain)
+                            .alert(isPresented: $showingAlert) {
+                                        Alert(title: Text("Select Done"), message: Text("Please return to view"), dismissButton: .default(Text("OK")))
+                                    }
                             
                         }
                     }

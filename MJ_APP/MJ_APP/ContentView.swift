@@ -9,19 +9,16 @@ import SwiftUI
 import CoreData
 import SceneKit
 struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-    
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Item>
-    
-    @FetchRequest(entity: Drawing.entity(), sortDescriptors: [], predicate: nil) var drawingData: FetchedResults<Drawing>
-    
+    @Environment(\.managedObjectContext) var moc
     @FetchRequest(entity: Authorization.entity(), sortDescriptors: [], predicate: nil) var authorizationData: FetchedResults<Authorization>
 
     var body: some View {
-        LoginView()
+        if authorizationData.count > 0{
+            MainView()
+        }else{
+            LoginView()
+        }
+        
     }
 }
 

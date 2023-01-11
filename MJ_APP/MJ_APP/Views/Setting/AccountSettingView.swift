@@ -6,10 +6,14 @@
 //
 
 import SwiftUI
-
+import CoreData
 struct AccountSettingView: View {
     @State var email:String = ""
     @State var password:String = ""
+    var network = Network()
+    @Environment(\.managedObjectContext) var moc
+    @FetchRequest(entity: Authorization.entity(), sortDescriptors: [], predicate: nil) var authorizationData: FetchedResults<Authorization>
+    
     var body: some View {
         NavigationStack{
             Form{
@@ -18,32 +22,24 @@ struct AccountSettingView: View {
                         .disabled(true)
                         
                     TextField("Password", text: $password)
+                        .disabled(true)
                         
                        
                 }, header: {
                     Text("User information")
                 },footer: {
-                    Text("You can update your password here")
+                    Text("Update account functionality will be added in the next release")
                 })
-                Button(action: {
-                    
-                }, label: {
-                    HStack{
-                        Text("Update")
-                        Image(systemName: "checkmark.circle")
-                    }
-                })
-                Button(action: {
-                    
-                }, label: {
-                    HStack{
-                        Text("Delete Account")
-                            .foregroundColor(.red)
-                    }
-                })
+
                 
             }
             .navigationTitle("Account Setting")
+            .onAppear(){
+                Task{
+                    email = authorizationData.first?.userName ?? ""
+                    password = authorizationData.first?.userPassword ?? ""
+                }
+            }
             
         }
     }

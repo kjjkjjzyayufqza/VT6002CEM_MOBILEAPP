@@ -18,7 +18,7 @@ struct SystemSettingView: View {
                 }, header: {
                     Text("")
                 },footer: {
-                    Text("If you cannot log in or go offline, you can choose to close the api and let the app run in offline mode")
+                    Text("If you cannot log in or go offline, you can choose to close the api and let the app run in offline mode(This function was not implemented due to lack of time)")
                 })
             }
             .navigationTitle("System Setting")
